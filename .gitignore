@@ -10,3 +10,5 @@ local.properties
 xcuserdata
 /realtime/build/
 /androidApp/build/
+/iosApp/deploykey
+/iosApp/deploykey.pub
