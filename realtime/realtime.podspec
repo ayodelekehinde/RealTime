@@ -1,14 +1,14 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'realtime'
     spec.version                  = '1.0'
-    spec.homepage                 = 'Link to the Shared Module homepage'
+    spec.homepage                 = 'https://github.com/Cherrio-LLC/RealTime'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'Some description for the Shared Module'
+    spec.summary                  = 'Library that enables smooth consumption of Dilivva websocket server'
     spec.vendored_frameworks      = 'build/cocoapods/framework/realtime.framework'
     spec.libraries                = 'c++'
-    spec.ios.deployment_target = '14.1'
+    spec.ios.deployment_target = '13'
                 
                 
     spec.pod_target_xcconfig = {

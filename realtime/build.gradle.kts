@@ -7,15 +7,6 @@ plugins {
     id("co.touchlab.faktory.kmmbridge") version "0.3.4"
 }
 
-kmmbridge{
-    mavenPublishArtifacts()
-    githubReleaseVersions()
-    cocoapods("git@github.com:Cherrio-LLC/RealTimePodspec.git")
-    versionPrefix.set("0.1")
-}
-
-addGithubPackagesRepository()
-
 kotlin {
 
     android()
@@ -24,14 +15,10 @@ kotlin {
     iosSimulatorArm64()
 
     cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
+        summary = "Library that enables smooth consumption of Dilivva websocket server"
+        homepage = "https://github.com/Cherrio-LLC/RealTime"
         version = "1.0"
-        ios.deploymentTarget = "14.1"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
-            baseName = "realtime"
-        }
+        ios.deploymentTarget = "13"
     }
     
 //    listOf(
@@ -89,6 +76,14 @@ kotlin {
             iosSimulatorArm64Test.dependsOn(this)
         }
     }
+}
+addGithubPackagesRepository()
+kmmbridge{
+    mavenPublishArtifacts()
+    githubReleaseVersions()
+    spm()
+    cocoapods("git@github.com:Cherrio-LLC/RealTimePodspec.git")
+    versionPrefix.set("0.1")
 }
 
 android {
