@@ -1,7 +1,9 @@
-name:Publish Release
+name: Publish Release
+
 on:
   push:
-    branches:  ["master"]
+    branches: ["master"]
+
 jobs:
   call-kmmbridge-publish:
     uses: touchlab/KMMBridgeGithubWorkflow/.github/workflows/faktorybuildbranches.yml@v0.3
