@@ -12,8 +12,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
-import com.dilivva.realtime.Greeting
-import com.dilivva.realtime.Realtime
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {

@@ -33,7 +33,7 @@ android {
 
 dependencies {
     //implementation(project(":realtime"))
-    implementation("github.cherrio:realtime-kmmbridge:0.1.2")
+    implementation("github.cherrio:realtime-android:0.2")
     implementation("androidx.compose.ui:ui:1.2.1")
     implementation("androidx.compose.ui:ui-tooling:1.2.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")

@@ -6,7 +6,6 @@ plugins {
     //id("signing")
     id("co.touchlab.faktory.kmmbridge")
 }
-version = "0.2"
 group = "github.cherrio"
 
 kotlin {
