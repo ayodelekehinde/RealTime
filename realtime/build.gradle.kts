@@ -3,8 +3,8 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("maven-publish")
-    id("signing")
-    id("co.touchlab.faktory.kmmbridge") version "0.3.4"
+    //id("signing")
+    id("co.touchlab.faktory.kmmbridge")
 }
 version = "0.1"
 kotlin {
