@@ -12,4 +12,5 @@ jobs:
 
   publish-android:
     uses: touchlab/KMMBridgeGithubWorkflow/.github/workflows/faktorybuildbranches.yml@v0.6
-    publishTask: publishAndroidReleasePublicationToGitHubPackagesRepository
+    with:
+       publishTask: publishAndroidReleasePublicationToGitHubPackagesRepository
