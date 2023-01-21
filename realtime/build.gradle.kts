@@ -6,7 +6,8 @@ plugins {
     //id("signing")
     id("co.touchlab.faktory.kmmbridge")
 }
-version = "0.1"
+version = "0.2"
+group = "github.cherrio.realtime"
 kotlin {
 
     android()
