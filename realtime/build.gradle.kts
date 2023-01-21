@@ -6,7 +6,7 @@ plugins {
     id("signing")
     id("co.touchlab.faktory.kmmbridge") version "0.3.4"
 }
-
+version = "0.1"
 kotlin {
 
     android()
