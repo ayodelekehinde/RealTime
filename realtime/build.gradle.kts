@@ -7,7 +7,8 @@ plugins {
     id("co.touchlab.faktory.kmmbridge")
 }
 version = "0.2"
-group = "github.cherrio.realtime"
+group = "github.cherrio"
+
 kotlin {
 
     android()

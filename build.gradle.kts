@@ -11,3 +11,8 @@ plugins {
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
+
+val lib_version: String by project
+subprojects {
+    version = co.touchlab.faktory.versionmanager.GitTagVersionManager.getVersion(project = project, versionPrefix = lib_version)
+}
