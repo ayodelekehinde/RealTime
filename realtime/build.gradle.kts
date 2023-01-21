@@ -95,3 +95,21 @@ android {
         minSdk = 25
     }
 }
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Cherrio-LLC/RealTime")
+        }
+    }
+
+    publications {
+        withType<MavenPublication> {
+            groupId = "github.cherrio"
+            artifactId = "realtime"
+            artifact("$buildDir/outputs/aar/realtime-release.aar")
+            version = co.touchlab.faktory.versionmanager.GitTagVersionManager.getVersion(project = project, versionPrefix = "0.1")
+        }
+    }
+}
