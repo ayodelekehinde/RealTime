@@ -65,5 +65,5 @@ jobs:
         if: always()
         uses: touchlab/action-delete-branch@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           branches: "build-${{ steps.generate-uuid.outputs.uuid }}"
