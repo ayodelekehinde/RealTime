@@ -10,6 +10,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Cherrio-LLC/RealTime")
+        }
     }
     versionCatalogs {
         create("libs"){
