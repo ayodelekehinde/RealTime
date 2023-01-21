@@ -10,8 +10,9 @@ version = "0.2"
 group = "github.cherrio"
 
 kotlin {
-
-    android()
+    android {
+        publishAllLibraryVariants()
+    }
     iosX64()
     iosArm64()
     iosSimulatorArm64()
