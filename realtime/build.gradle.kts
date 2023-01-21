@@ -2,7 +2,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("maven-publish")
+    `maven-publish`
     //id("signing")
     id("co.touchlab.faktory.kmmbridge")
 }
