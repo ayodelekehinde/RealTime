@@ -13,6 +13,11 @@ dependencyResolutionManagement {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/Cherrio-LLC/RealTime")
+
+            credentials{
+                username = "Android"
+                password = "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"
+            }
         }
     }
     versionCatalogs {

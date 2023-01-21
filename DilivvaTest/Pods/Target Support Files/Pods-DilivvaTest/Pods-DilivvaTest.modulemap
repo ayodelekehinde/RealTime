@@ -1,0 +1,6 @@
+framework module Pods_DilivvaTest {
+  umbrella header "Pods-DilivvaTest-umbrella.h"
+
+  export *
+  module * { export * }
+}

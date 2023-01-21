@@ -6,14 +6,14 @@ Pod::Spec.new do |spec|
     spec.authors                  = ''
     spec.license                  = ''
     spec.summary                  = 'Library that enables smooth consumption of Dilivva websocket server'
-    spec.vendored_frameworks      = 'build/cocoapods/framework/realtime.framework'
+    spec.vendored_frameworks      = 'build/cocoapods/framework/RealTime.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '13'
                 
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':realtime',
-        'PRODUCT_MODULE_NAME' => 'realtime',
+        'PRODUCT_MODULE_NAME' => 'RealTime',
     }
                 
     spec.script_phases = [

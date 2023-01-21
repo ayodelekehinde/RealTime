@@ -1,9 +1,9 @@
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
+    kotlin("plugin.serialization")
     id("com.android.library")
     `maven-publish`
-    //id("signing")
     id("co.touchlab.faktory.kmmbridge")
 }
 group = "github.cherrio"
@@ -21,6 +21,10 @@ kotlin {
         homepage = "https://github.com/Cherrio-LLC/RealTime"
         version = "1.0"
         ios.deploymentTarget = "13"
+        podfile = project.file("../DilivvaTest/Podfile")
+        framework {
+            baseName = "RealTime"
+        }
     }
     
 //    listOf(
@@ -96,20 +100,6 @@ android {
     }
 }
 
-//publishing {
-//    repositories {
-//        maven {
-//            name = "GitHubPackages"
-//            url = uri("https://maven.pkg.github.com/Cherrio-LLC/RealTime")
-//        }
-//    }
-//
-//    publications {
-//        withType<MavenPublication> {
-//            groupId = "github.cherrio"
-//            artifactId = "realtime"
-//            //artifact("$buildDir/outputs/aar/realtime-release.aar")
-//            version = co.touchlab.faktory.versionmanager.GitTagVersionManager.getVersion(project = project, versionPrefix = "0.1")
-//        }
-//    }
-//}
+tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest> {
+    deviceId = "iPhone 14"
+}

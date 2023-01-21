@@ -12,20 +12,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.dilivva.realtime.Coordinates
+import com.dilivva.realtime.Realtime
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Realtime.connect("Android", rememberCoroutineScope())
+            Realtime.connect(rememberCoroutineScope())
 
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GreetingView(Greeting().greet())
+                    GreetingView("Hello Android")
                 }
             }
         }
@@ -40,7 +42,7 @@ fun GreetingView(text: String) {
 
         Button(onClick = {
             scope.launch {
-                Realtime.sendData("1234567890987654321")
+                Realtime.sendData(Coordinates("lat","lon"))
             }
 
         }) {

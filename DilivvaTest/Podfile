@@ -1,0 +1,6 @@
+  use_frameworks!
+  target 'DilivvaTest' do
+
+  platform :ios, '13'
+  pod 'realtime', :path => '../realtime'
+end

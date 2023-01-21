@@ -7,6 +7,10 @@ struct iOSApp: App {
     @Environment(\.scenePhase) private var scenePhase
     //@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    init(){
+        
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -18,12 +22,6 @@ struct iOSApp: App {
     }
     
     func initialize(){
-        RealtimeKt.connect{ data in
-            print(data)
-        } onError: { error in
-            if error != nil {
-                print("Error \(error ?? "Error")")
-            }
-        }
+        
     }
 }

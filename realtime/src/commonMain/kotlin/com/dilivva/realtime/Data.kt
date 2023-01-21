@@ -16,6 +16,13 @@ import kotlinx.coroutines.flow.internal.ChannelFlow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
+
+fun configure(_baseurl: String,  _username: String, _path: String = "connect"){
+    baseurl = _baseurl
+    username = _username
+    path = _path
+}
+
 private val client = HttpClient {
     install(WebSockets) {
         contentConverter = KotlinxWebsocketSerializationConverter(Json {
@@ -24,10 +31,15 @@ private val client = HttpClient {
         })
     }
 }
-private val channel = Channel<String>()
-private val flow = MutableStateFlow("")
 
-private val sendMessageFlow: MutableSharedFlow<String> = MutableSharedFlow()
+@kotlinx.serialization.Serializable
+data class Coordinates(
+    val lat: String,
+    val long: String
+)
+private val channel = Channel<String>()
+
+private val serializableChannel = Channel<Coordinates>()
 
 
 /**
@@ -36,34 +48,22 @@ private val sendMessageFlow: MutableSharedFlow<String> = MutableSharedFlow()
  *
  */
 
-private var socket: DefaultWebSocketSession? = null
+
 
 internal var isConnected = false
-
-//internal suspend fun connectToServer() {
-//
-//    println("Connecting to server")
-//    client.use {
-//        it.wss("wss://ktorrealtimetest-production.up.railway.app/connect/ayodele") {
-//            socket = this
-//            try {
-//                println("Connected")
-//                while (true){
-//                    val frame = incoming.receive()
-//                }
-//            } catch (e: ClosedReceiveChannelException) {
-//                println("Closed=${e.message}")
-//            }
-//        }
-//    }
-//}
-internal fun connectToServer(username: String) = flow {
+private var baseurl = ""
+private var path = ""
+private var username = ""
+internal fun connectToServer() = flow {
+    require(baseurl.isNotEmpty()){ "BaseUrl is required, did you call initialize before connect" }
+    require(path.isNotEmpty()){ "Path is required, did you call initialize before connect" }
+    require(username.isNotEmpty()){ "Username is required, did you call initialize before connect" }
     if (!isConnected) {
-        client.wss("wss://ktorrealtimetest-production.up.railway.app/connect/$username") {
+        client.wss("wss://$baseurl/$path/$username") {
             println("Connecting")
             coroutineScope {
-                channel.consumeAsFlow()
-                    .map(::send)
+                serializableChannel.consumeAsFlow()
+                    .map { sendSerialized(it) }
                     .launchIn(this)
                 while (true) {
                     println("Connected")
@@ -76,14 +76,12 @@ internal fun connectToServer(username: String) = flow {
             }
         }
     }else{
-        println("Couldnt connect")
+        println("Couldn't connect")
     }
 }.retryWithBackoff()
 
-internal suspend fun send(message: String) {
-    //println("Message=$message")
-    channel.send(message)
-    //socket?.send(message)
+internal suspend fun send(coordinates: Coordinates) {
+    serializableChannel.send(coordinates)
 }
 
 

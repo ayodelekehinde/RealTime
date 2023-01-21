@@ -8,14 +8,31 @@ import kotlinx.coroutines.flow.onEach
 
 object Realtime {
 
-    fun connect(username: String, scope: CoroutineScope){
-        connectToServer(username).onEach {
-            println("Message=$it")
+
+    fun configureApp(baseurl: String,  username: String, path: String){
+        configure(baseurl, username, path)
+    }
+    fun configureApp(baseurl: String,  username: String){
+        configure(baseurl, username, "connect")
+    }
+    fun connectWithCallback(scope: CoroutineScope, onSuccess: (String) -> Unit, onError: (String?) -> Unit){
+        connectNow(scope, onSuccess, onError)
+    }
+    fun connect(scope: CoroutineScope){
+        connectNow(scope)
+    }
+    private fun connectNow(
+        scope: CoroutineScope,
+        onSuccess: (String) -> Unit = {},
+        onError: (String?) -> Unit = {}
+    ){
+        connectToServer().onEach {
+            onSuccess(it)
         }.catch {
-            println("Error=${it.message}")
+            onError(it.stackTraceToString())
         }.launchIn(scope)
     }
-    suspend fun sendData(data: String){
-        send(message = data)
+    suspend fun sendData(coordinates: Coordinates){
+        send(coordinates)
     }
 }

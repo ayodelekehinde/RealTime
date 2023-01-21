@@ -1,0 +1,16 @@
+PODS:
+  - realtime (1.0)
+
+DEPENDENCIES:
+  - realtime (from `../realtime`)
+
+EXTERNAL SOURCES:
+  realtime:
+    :path: "../realtime"
+
+SPEC CHECKSUMS:
+  realtime: 148f7a3696b008bacab012c42486b2ece2686a11
+
+PODFILE CHECKSUM: 7fb1641afc20de787a49862e0fc87e430283fed2
+
+COCOAPODS: 1.11.3
