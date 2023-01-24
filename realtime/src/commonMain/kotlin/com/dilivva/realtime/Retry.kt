@@ -16,17 +16,18 @@ import kotlin.time.Duration.Companion.seconds
  *  @param delay -- delay in seconds between retries
  *  @param delayAtMost -- maximum delay in seconds after which this value is used to delay
  */
-fun <T> Flow<T>.retryWithBackoff(
+fun  Flow<String>.retryWithBackoff(
     delay: Int = 1,
     delayAtMost: Int = 10,
-): Flow<T> {
+): Flow<String> {
     var mDelay = delay
 
     return retryWhen { cause, _ ->
         println("ERROR=${cause::class}")
+        emit(cause.getErrorMessage())
         val shouldRetry = shouldRetryBasedOnException(cause)
         isConnected = !shouldRetry
-        println("Is retrying? $shouldRetry")
+        emit("Is retrying? $shouldRetry")
 
         if (shouldRetry) {
             delay(mDelay.seconds)
@@ -42,4 +43,12 @@ fun <T> Flow<T>.retryWithBackoff(
 private fun shouldRetryBasedOnException(cause: Throwable): Boolean{
     val listOfExceptions = getExceptions() + ClosedReceiveChannelException::class
     return listOfExceptions.any { cause::class == it }
+}
+
+private fun Throwable.getErrorMessage(): String{
+    return when{
+        this.isNetworkError()-> "Network error"
+        this is ClosedReceiveChannelException -> message ?: "Connection closed"
+        else -> message ?: "Error occurred, try again."
+    }
 }

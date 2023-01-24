@@ -14,13 +14,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.dilivva.realtime.Coordinates
 import com.dilivva.realtime.Realtime
+import com.dilivva.realtime.Response
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Realtime.connect(rememberCoroutineScope())
+            Realtime.connectWithCallback(rememberCoroutineScope()){
+                when(it){
+                    is Response.Error -> println(it.error)
+                    is Response.Message -> println(it.message)
+                }
+            }
 
             MyApplicationTheme {
                 Surface(
@@ -42,7 +48,7 @@ fun GreetingView(text: String) {
 
         Button(onClick = {
             scope.launch {
-                Realtime.sendData(Coordinates("lat","lon"))
+                Realtime.sendData(Coordinates("Apata","Ibadan"))
             }
 
         }) {

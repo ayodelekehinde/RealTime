@@ -1,34 +1,75 @@
 package com.dilivva.realtime
 
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.websocket.*
-import io.ktor.client.utils.*
-import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
-import io.ktor.utils.io.core.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.internal.ChannelFlow
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 
-fun configure(_baseurl: String,  _username: String, _path: String = "connect"){
-    baseurl = _baseurl
-    username = _username
-    path = _path
-}
 
-private val client = HttpClient {
-    install(WebSockets) {
-        contentConverter = KotlinxWebsocketSerializationConverter(Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        })
+internal var isConnected = false
+class Data(engine: HttpClientEngine): DataApi{
+    private val client = HttpClient(engine) {
+        install(this)
+    }
+    private val coordinatesChannel = Channel<Coordinates>()
+    private var baseurl = ""
+    private var path = ""
+    private var username = ""
+
+    fun configure(_baseurl: String, _username: String, _path: String = "connect"){
+        baseurl = _baseurl
+        username = _username
+        path = _path
+    }
+    override suspend fun send(coordinates: Coordinates) {
+        coordinatesChannel.send(coordinates)
+    }
+     override fun connectToServer() = flow {
+        checkConditions()
+        if (!isConnected) {
+            client.wss("wss://$baseurl/$path/$username") {
+                emit("Connecting")
+                coroutineScope {
+                    getChannel()
+                        .map { sendSerialized(it) }
+                        .launchIn(this)
+                    while (true) {
+                        emit("Connected")
+                        isConnected = true
+                        val frame = incoming.receive()
+                        if (frame is Frame.Text) {
+                            emit(frame.readText())
+                        }
+                    }
+                }
+            }
+        }else{
+            emit("Couldn't connect")
+        }
+    }.retryWithBackoff()
+
+    override fun getChannel() = coordinatesChannel.consumeAsFlow()
+    private fun checkConditions(){
+        when{
+            baseurl.isEmpty() -> throw IllegalStateException("BaseUrl is required, did you call initialize before connect")
+            path.isEmpty() -> throw IllegalStateException("Path is required, did you call initialize before connect")
+            username.isEmpty() -> throw IllegalStateException("Username or Id is required, did you call initialize before connect")
+        }
+    }
+
+    private fun install(httpClientConfig: HttpClientConfig<*>){
+        httpClientConfig.install(WebSockets) {
+            contentConverter = KotlinxWebsocketSerializationConverter(Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            })
+        }
     }
 }
 
@@ -37,52 +78,7 @@ data class Coordinates(
     val lat: String,
     val long: String
 )
-private val channel = Channel<String>()
 
-private val serializableChannel = Channel<Coordinates>()
-
-
-/**
- * Make customizable
- * 1. pass base url, path and parameter
- *
- */
-
-
-
-internal var isConnected = false
-private var baseurl = ""
-private var path = ""
-private var username = ""
-internal fun connectToServer() = flow {
-    require(baseurl.isNotEmpty()){ "BaseUrl is required, did you call initialize before connect" }
-    require(path.isNotEmpty()){ "Path is required, did you call initialize before connect" }
-    require(username.isNotEmpty()){ "Username is required, did you call initialize before connect" }
-    if (!isConnected) {
-        client.wss("wss://$baseurl/$path/$username") {
-            println("Connecting")
-            coroutineScope {
-                serializableChannel.consumeAsFlow()
-                    .map { sendSerialized(it) }
-                    .launchIn(this)
-                while (true) {
-                    println("Connected")
-                    isConnected = true
-                    val frame = incoming.receive()
-                    if (frame is Frame.Text) {
-                        emit(frame.readText())
-                    }
-                }
-            }
-        }
-    }else{
-        println("Couldn't connect")
-    }
-}.retryWithBackoff()
-
-internal suspend fun send(coordinates: Coordinates) {
-    serializableChannel.send(coordinates)
-}
 
 
 

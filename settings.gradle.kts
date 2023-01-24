@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 
             credentials{
                 username = "Android"
-                password = "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"
+                password = "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"
             }
         }
     }

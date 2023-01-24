@@ -5,9 +5,13 @@ plugins {
     id("com.android.library")
     `maven-publish`
     id("co.touchlab.faktory.kmmbridge")
+    id("org.kodein.mock.mockmp")
 }
 group = "github.cherrio"
 
+mockmp {
+    usesHelper = true
+}
 kotlin {
     android {
         publishAllLibraryVariants()
@@ -26,17 +30,6 @@ kotlin {
             baseName = "RealTime"
         }
     }
-    
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach {
-//        it.binaries.framework {
-//            baseName = "realtime"
-//        }
-//    }
-
     sourceSets {
         val commonMain by getting{
             dependencies {
@@ -59,7 +52,9 @@ kotlin {
                 implementation(libs.client.android)
             }
         }
-        val androidTest by getting
+        val androidTest by getting {
+            dependsOn(commonTest)
+        }
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting

@@ -1,5 +1,6 @@
 package com.dilivva.realtime
 
+import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -7,32 +8,35 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 object Realtime {
-
-
+    private val data = Data(CIO.create())
     fun configureApp(baseurl: String,  username: String, path: String){
-        configure(baseurl, username, path)
+        data.configure(baseurl, username, path)
     }
     fun configureApp(baseurl: String,  username: String){
-        configure(baseurl, username, "connect")
+        data.configure(baseurl, username, "connect")
     }
-    fun connectWithCallback(scope: CoroutineScope, onSuccess: (String) -> Unit, onError: (String?) -> Unit){
-        connectNow(scope, onSuccess, onError)
+    fun connectWithCallback(scope: CoroutineScope, onResponse: (Response) -> Unit){
+        connectNow(scope, onResponse)
     }
     fun connect(scope: CoroutineScope){
         connectNow(scope)
     }
     private fun connectNow(
         scope: CoroutineScope,
-        onSuccess: (String) -> Unit = {},
-        onError: (String?) -> Unit = {}
+        onResponse: (Response) -> Unit = {}
     ){
-        connectToServer().onEach {
-            onSuccess(it)
+        data.connectToServer().onEach {
+            onResponse(Response.Message(it))
         }.catch {
-            onError(it.stackTraceToString())
+            onResponse(Response.Error(it.stackTraceToString()))
         }.launchIn(scope)
     }
     suspend fun sendData(coordinates: Coordinates){
-        send(coordinates)
+        data.send(coordinates)
     }
+}
+
+sealed class Response{
+    data class Error(val error: String): Response()
+    data class Message(val message: String): Response()
 }
