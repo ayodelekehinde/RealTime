@@ -8,7 +8,7 @@ struct iOSApp: App {
     //@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init(){
-        
+      RealtimeKt.configureApp(baseurl: "baseUrl", username: "iOS")
     }
     
     var body: some Scene {
