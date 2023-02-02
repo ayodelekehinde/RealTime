@@ -7,7 +7,7 @@ plugins {
     id("co.touchlab.faktory.kmmbridge")
     id("org.kodein.mock.mockmp")
 }
-group = "github.cherrio"
+group = "com.dilivva"
 
 mockmp {
     usesHelper = true
