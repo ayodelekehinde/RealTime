@@ -1,14 +1,12 @@
 package com.dilivva.realtime
 
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.okhttp.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 
 object Realtime {
-    private val data = Data(CIO.create())
+    private val data = Data(OkHttp.create())
     fun configureApp(baseurl: String,  username: String, path: String){
         data.configure(baseurl, username, path)
     }
@@ -29,7 +27,7 @@ object Realtime {
             onResponse(Response.Message(it))
         }.catch {
             onResponse(Response.Error(it.stackTraceToString()))
-        }.launchIn(scope)
+        }.flowOn(Dispatchers.IO).launchIn(scope)
     }
     suspend fun sendData(coordinates: Coordinates){
         data.send(coordinates)

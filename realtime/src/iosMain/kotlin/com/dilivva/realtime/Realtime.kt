@@ -2,6 +2,7 @@ package com.dilivva.realtime
 
 import io.ktor.client.engine.darwin.*
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,17 +18,15 @@ fun configureApp(baseurl: String,  username: String){
     data.configure(baseurl, username, "connect")
 }
 fun connect(onSuccess: (String) -> Unit, onError: (String?) -> Unit) {
-    data.connectToServer().onEach {
-        onSuccess(it)
-    }.catch {
-        onError(it.message)
-    }.onCompletion {
-        it?.message?.let { error ->
-            onError("onComplete: $error")
-        }
-    }.launchIn(scope)
+    connectNow(onSuccess, onError)
 }
 fun connect() {
+    connectNow()
+}
+private fun connectNow(
+    onSuccess: (String) -> Unit = {},
+    onError: (String?) -> Unit = {}
+) {
     data.connectToServer().onEach {
         println(it)
     }.catch {
@@ -36,7 +35,7 @@ fun connect() {
         it?.message?.let { error ->
             println(error)
         }
-    }.launchIn(scope)
+    }.flowOn(Dispatchers.Default).launchIn(scope)
 }
 
 fun sendMessage(coordinates: Coordinates) {

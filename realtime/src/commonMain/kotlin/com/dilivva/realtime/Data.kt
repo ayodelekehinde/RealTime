@@ -12,7 +12,8 @@ import kotlinx.serialization.json.Json
 
 
 
-internal var isConnected = false
+var isConnected = false
+    internal set
 class Data(engine: HttpClientEngine): DataApi{
     private val client = HttpClient(engine) {
         install(this)

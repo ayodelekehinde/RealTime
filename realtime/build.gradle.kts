@@ -31,7 +31,7 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting{
+        val commonMain by getting {
             dependencies {
                 implementation(libs.websocket)
                 implementation(libs.coroutine.core)
@@ -91,7 +91,7 @@ android {
     namespace = "com.dilivva.realtime"
     compileSdk = 33
     defaultConfig {
-        minSdk = 25
+        minSdk = 21
     }
 }
 

@@ -7,6 +7,6 @@ class MyApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Realtime.configureApp("ktorrealtimetest-production.up.railway.app","Android")
+        Realtime.configureApp("realtime.dilivva.com","Android")
     }
 }

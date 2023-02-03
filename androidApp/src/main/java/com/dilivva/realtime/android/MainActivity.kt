@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.dilivva.realtime.Coordinates
 import com.dilivva.realtime.Realtime
 import com.dilivva.realtime.Response
+import com.dilivva.realtime.isConnected
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Realtime.connectWithCallback(rememberCoroutineScope()){
                 when(it){
-                    is Response.Error -> println(it.error)
+                    is Response.Error -> println("ERROR=${it.error}")
                     is Response.Message -> println(it.message)
                 }
             }
