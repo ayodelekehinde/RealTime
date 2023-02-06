@@ -27,7 +27,7 @@ dependencyResolutionManagement {
 
             library("client-core","io.ktor","ktor-client-core").versionRef("ktor")
             library("websocket", "io.ktor","ktor-client-websockets").versionRef("ktor")
-            library("client-android","io.ktor","ktor-client-okhttp").versionRef("ktor")
+            library("client-android","io.ktor","ktor-client-cio").versionRef("ktor")
             library("client-ios","io.ktor","ktor-client-darwin").versionRef("ktor")
 
             library("client-content-neg","io.ktor","ktor-client-content-negotiation").versionRef("ktor")

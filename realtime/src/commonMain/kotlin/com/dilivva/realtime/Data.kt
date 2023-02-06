@@ -35,17 +35,20 @@ class Data(engine: HttpClientEngine): DataApi{
         checkConditions()
         if (!isConnected) {
             client.wss("wss://$baseurl/$path/$username") {
-                emit("Connecting")
+                emit("Connected successfully")
                 coroutineScope {
                     getChannel()
                         .map { sendSerialized(it) }
                         .launchIn(this)
                     while (true) {
-                        emit("Connected")
                         isConnected = true
-                        val frame = incoming.receive()
-                        if (frame is Frame.Text) {
-                            emit(frame.readText())
+                        when(val frame = incoming.receive()){
+                             is Frame.Text ->{
+                               val message = frame.readText()
+                                if (message == "Unauthenticated") throw UnauthenticatedException
+                                emit(message)
+                            }
+                            else ->{}
                         }
                     }
                 }

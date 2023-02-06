@@ -8,7 +8,7 @@ android {
     compileSdk = 33
     defaultConfig {
         applicationId = "com.dilivva.realtime.android"
-        minSdk = 25
+        minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -36,6 +36,12 @@ android {
             "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
         )
     }
+//    //Step 1: add this
+//    compileOptions{
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
+//        isCoreLibraryDesugaringEnabled = true
+//    }
 
 }
 
@@ -48,4 +54,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.2.1")
     implementation("androidx.compose.material:material:1.2.1")
     implementation("androidx.activity:activity-compose:1.5.1")
+
+    //Step 3
+    //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
 }

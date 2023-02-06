@@ -1,12 +1,13 @@
 package com.dilivva.realtime
 
-import io.ktor.client.engine.okhttp.*
+import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 
+@Suppress("unused")
 object Realtime {
-    private val data = Data(OkHttp.create())
+    private val data = Data(CIO.create())
     fun configureApp(baseurl: String,  username: String, path: String){
         data.configure(baseurl, username, path)
     }
