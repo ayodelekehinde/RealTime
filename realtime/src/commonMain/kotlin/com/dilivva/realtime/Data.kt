@@ -5,8 +5,8 @@ import io.ktor.client.engine.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
 
@@ -29,7 +29,7 @@ class Data(engine: HttpClientEngine): DataApi{
         path = _path
     }
     override suspend fun send(coordinates: Coordinates) {
-        coordinatesChannel.send(coordinates)
+        coordinatesChannel.trySend(coordinates)
     }
      override fun connectToServer() = flow {
         checkConditions()
@@ -37,9 +37,7 @@ class Data(engine: HttpClientEngine): DataApi{
             client.wss("wss://$baseurl/$path/$username") {
                 emit("Connected successfully")
                 coroutineScope {
-                    getChannel()
-                        .map { sendSerialized(it) }
-                        .launchIn(this)
+                    getChannel().map { sendSerialized(it) }.launchIn(this)
                     while (true) {
                         isConnected = true
                         when(val frame = incoming.receive()){
@@ -58,7 +56,7 @@ class Data(engine: HttpClientEngine): DataApi{
         }
     }.retryWithBackoff()
 
-    override fun getChannel() = coordinatesChannel.consumeAsFlow()
+    override fun getChannel() = coordinatesChannel.receiveAsFlow()
     private fun checkConditions(){
         when{
             baseurl.isEmpty() -> throw IllegalStateException("BaseUrl is required, did you call initialize before connect")

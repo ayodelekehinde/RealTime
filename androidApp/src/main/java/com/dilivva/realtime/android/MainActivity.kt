@@ -6,16 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
 import com.dilivva.realtime.Coordinates
 import com.dilivva.realtime.Realtime
 import com.dilivva.realtime.Response
-import com.dilivva.realtime.isConnected
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -24,8 +20,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             Realtime.connectWithCallback(rememberCoroutineScope()){
                 when(it){
-                    is Response.Error -> println("ERROR=${it.error}")
-                    is Response.Message -> println(it.message)
+                    is Response.Error ->{} //println("ERROR=${it.error}")
+                    is Response.Message ->{} //println("Message= ${it.message}")
                 }
             }
 
@@ -43,7 +39,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GreetingView(text: String) {
+    val viewModel: ViewModel = remember {
+        ViewModel()
+    }
     val scope = rememberCoroutineScope()
+
+
     Column {
         Text(text = text)
 
@@ -66,3 +67,4 @@ fun DefaultPreview() {
         GreetingView("Hello, Android!")
     }
 }
+
