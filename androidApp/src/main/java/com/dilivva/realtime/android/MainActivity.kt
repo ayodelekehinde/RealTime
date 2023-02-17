@@ -15,16 +15,12 @@ import com.dilivva.realtime.Response
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var viewModel: ViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("onCreate")
+        viewModel = ViewModel()
         setContent {
-            Realtime.connectWithCallback(rememberCoroutineScope()){
-                when(it){
-                    is Response.Error ->{} //println("ERROR=${it.error}")
-                    is Response.Message ->{} //println("Message= ${it.message}")
-                }
-            }
-
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -35,13 +31,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        println("onResume")
+        viewModel.startConnection()
+    }
 }
 
 @Composable
 fun GreetingView(text: String) {
-    val viewModel: ViewModel = remember {
-        ViewModel()
-    }
     val scope = rememberCoroutineScope()
 
 

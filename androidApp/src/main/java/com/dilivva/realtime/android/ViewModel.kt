@@ -1,5 +1,6 @@
 package com.dilivva.realtime.android
 
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewModelScope
 import com.dilivva.realtime.Coordinates
 import com.dilivva.realtime.Realtime
@@ -12,6 +13,14 @@ class ViewModel: androidx.lifecycle.ViewModel() {
 
     init {
         getLocation()
+    }
+
+    fun startConnection()= viewModelScope.launch{
+        println("CoNNECTED=${Realtime.isConnected()}")
+        if (!Realtime.isConnected()) {
+            Realtime.configureApp("realtime.dilivva.com.ng", "acaf50a0-9cbb-11ed-816d-d9e20e6886fe")
+            Realtime.connect(this)
+        }
     }
 
     private fun getLocation() = viewModelScope.launch {

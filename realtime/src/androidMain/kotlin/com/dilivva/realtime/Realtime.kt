@@ -20,6 +20,7 @@ object Realtime {
     fun connect(scope: CoroutineScope){
         connectNow(scope)
     }
+    fun isConnected() = isConnected
     private fun connectNow(
         scope: CoroutineScope,
         onResponse: (Response) -> Unit = {}
