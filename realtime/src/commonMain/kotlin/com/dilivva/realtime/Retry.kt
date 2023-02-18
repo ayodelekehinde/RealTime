@@ -1,13 +1,9 @@
 package com.dilivva.realtime
 
-import io.ktor.util.network.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.isActive
 import kotlinx.coroutines.flow.retryWhen
-import kotlinx.coroutines.isActive
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -16,6 +12,7 @@ import kotlin.time.Duration.Companion.seconds
  *  @param delay -- delay in seconds between retries
  *  @param delayAtMost -- maximum delay in seconds after which this value is used to delay
  */
+
 fun  Flow<String>.retryWithBackoff(
     delay: Int = 1,
     delayAtMost: Int = 10,
@@ -23,12 +20,8 @@ fun  Flow<String>.retryWithBackoff(
     var mDelay = delay
 
     return retryWhen { cause, _ ->
-        println("ERROR=${cause::class}")
         emit(cause.getErrorMessage())
         val shouldRetry = shouldRetryBasedOnException(cause)
-        isConnected = !shouldRetry
-        emit("Is retrying? $shouldRetry")
-
         if (shouldRetry) {
             delay(mDelay.seconds)
             val next = mDelay * 2
