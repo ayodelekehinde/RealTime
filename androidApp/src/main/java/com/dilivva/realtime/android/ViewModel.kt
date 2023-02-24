@@ -3,6 +3,7 @@ package com.dilivva.realtime.android
 import androidx.lifecycle.viewModelScope
 import com.dilivva.realtime.Coordinates
 import com.dilivva.realtime.Realtime
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -16,8 +17,19 @@ class ViewModel: androidx.lifecycle.ViewModel() {
     }
 
     fun startConnection() = viewModelScope.launch{
-        Realtime.configureApp("realtime.dilivva.com.ng", list.first())
-        Realtime.connect(this)
+        async {
+            val userId = list.get(0)
+            println("Inside Async: $userId")
+            Realtime.configureApp("192.168.8.102:8087", userId)
+            Realtime.connect(this)
+        }
+        async {
+            val userId = list.get(1)
+            println("Inside Async: $userId")
+            Realtime.configureApp("192.168.8.102:8087", userId)
+            Realtime.connect(this)
+        }
+
     }
 
     private fun getLocation() = viewModelScope.launch {
@@ -26,7 +38,7 @@ class ViewModel: androidx.lifecycle.ViewModel() {
                 val lat = randomNumbers()
                 val coordinate = Coordinates(lat, long)
                 Realtime.sendData(coordinate)
-                delay(1000)
+                delay(10000)
             }
     }
 

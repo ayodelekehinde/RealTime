@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.*
 @Suppress("unused")
 object Realtime {
     private val data = Data(CIO.create())
+    private var isConnected = false
     fun configureApp(baseurl: String,  username: String, path: String){
         data.configure(baseurl, username, path)
     }
@@ -20,19 +21,23 @@ object Realtime {
     fun connect(scope: CoroutineScope){
         connectNow(scope)
     }
-    fun isConnected() = isConnected
     private fun connectNow(
         scope: CoroutineScope,
         onResponse: (Response) -> Unit = {}
     ){
-        data.connectToServer().onEach {
-            onResponse(Response.Message(it))
-        }.catch {
-            onResponse(Response.Error(it.stackTraceToString()))
-        }.flowOn(Dispatchers.IO).launchIn(scope)
+        if (!isConnected) {
+            isConnected = true
+            data.connectToServer()
+                .onEach { onResponse(Response.Message(it)) }
+                .catch { onResponse(Response.Error(it.stackTraceToString())) }
+                .onCompletion { isConnected = false }
+                .flowOn(Dispatchers.IO).launchIn(scope)
+        }
     }
     suspend fun sendData(coordinates: Coordinates){
-        data.send(coordinates)
+        if (isConnected) {
+            data.send(coordinates)
+        }
     }
 }
 
