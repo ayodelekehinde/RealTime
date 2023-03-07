@@ -82,9 +82,9 @@ addGithubPackagesRepository()
 kmmbridge{
     mavenPublishArtifacts()
     githubReleaseVersions()
-    spm()
-    cocoapods("git@github.com:Cherrio-LLC/RealTimePodspec.git")
     versionPrefix.set("0.1")
+    spm()
+    //cocoapods("git@github.com:Cherrio-LLC/RealTimePodspec.git")
 }
 
 android {
